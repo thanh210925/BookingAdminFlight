@@ -1,9 +1,13 @@
 namespace BookingAdmin
 {
+
     public class Program
     {
+
         public static void Main(string[] args)
         {
+            AppContext.SetSwitch("System.Net.SocketsHttpHandler.Http3Support", false);
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.

@@ -5,29 +5,65 @@
 }
 
 <div class="container mt-4">
-    <h2 class="text-center fw-bold text-primary mb-4">✈️ Chỉnh sửa hãng bay</h2>
+    <div class="card shadow-lg border-0 rounded-4 p-4">
+        <h2 class="fw-bold text-primary mb-4 text-center">
+            ✈️ Chỉnh sửa thông tin hãng bay
+        </h2>
 
-    <form asp-action="Edit" method="post" class="shadow p-4 rounded bg-light">
-        <input type="hidden" asp-for="Id" />
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
 
-        <div class="form-group mb-3">
-            <label class="form-label">Tên hãng</label>
-            <input asp-for="Name" class="form-control" placeholder="Nhập tên hãng bay" required />
-        </div>
+            <!-- 🔹 Tên hãng bay -->
+            <div class="form-group mb-3">
+                <label class="form-label fw-semibold">Tên hãng bay</label>
+                <input asp-for="Name" class="form-control" placeholder="VD: Emirates, VietJet Air..." required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <label class="form-label">Mã hãng</label>
-            <input asp-for="Code" class="form-control" placeholder="VD: VN, QH, VJ..." required />
-        </div>
+            <!-- 🔹 Mã hãng -->
+            <div class="form-group mb-3">
+                <label class="form-label fw-semibold">Mã hãng (Code)</label>
+                <input asp-for="Code" class="form-control" placeholder="VD: EK, VJ, VN..." required />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-4">
-            <label class="form-label">Quốc gia</label>
-            <input asp-for="Country" class="form-control" placeholder="Nhập quốc gia" required />
-        </div>
+            <!-- 🔹 Quốc gia -->
+            <div class="form-group mb-3">
+                <label class="form-label fw-semibold">Quốc gia</label>
+                <input name="Country" value="@Model?.Country" class="form-control" placeholder="VD: United Arab Emirates, Việt Nam..." />
+                <small class="text-muted">Nếu không cần, có thể để trống.</small>
+            </div>
 
-        <div class="text-center">
-            <button type="submit" class="btn btn-success px-4">💾 Lưu thay đổi</button>
-            <a asp-action="Index" class="btn btn-secondary px-4 ms-2">⬅️ Quay lại</a>
-        </div>
-    </form>
+            <hr class="my-4" />
+
+            <h5 class="fw-bold text-secondary mb-3">🪑 Cấu hình máy bay</h5>
+
+            <!-- 🔹 Số hàng ghế -->
+            <div class="form-group mb-3">
+                <label class="form-label">Số hàng ghế</label>
+                <input asp-for="SeatRows" type="number" class="form-control" min="1" placeholder="VD: 60" required />
+                <span asp-validation-for="SeatRows" class="text-danger"></span>
+            </div>
+
+            <!-- 🔹 Số ghế mỗi hàng -->
+            <div class="form-group mb-4">
+                <label class="form-label">Số ghế mỗi hàng</label>
+                <input asp-for="SeatCols" type="number" class="form-control" min="1" placeholder="VD: 6" required />
+                <span asp-validation-for="SeatCols" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">
+                    ⬅️ Quay lại danh sách
+                </a>
+                <button type="submit" class="btn btn-primary px-4">
+                    💾 Lưu thay đổi
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

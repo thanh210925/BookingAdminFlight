@@ -35,18 +35,24 @@ namespace BookingAdmin.Services
         }
 
         // ============================================================
-        // 🟢 THÊM DOCUMENT MỚI (có ID tự động)
+        // 🟢 THÊM DOCUMENT MỚI (có ID tự động) - TRẢ VỀ ID
         // ============================================================
-        public async Task AddAsync<T>(string collectionName, T data)
+        public async Task<string> AddAsync<T>(string collectionName, T data)
         {
-            var docRef = _db.Collection(collectionName).Document(); // Firestore tự tạo ID
+            // 🔹 Tạo document mới (Firestore tự sinh ID)
+            var docRef = _db.Collection(collectionName).Document();
+
+            // 🔹 Nếu model có property Id → gán ID đó vào model
             var idProp = typeof(T).GetProperty("Id");
-
             if (idProp != null)
-                idProp.SetValue(data, docRef.Id); // Gán ID vào model
+                idProp.SetValue(data, docRef.Id);
 
+            // 🔹 Lưu dữ liệu vào Firestore
             await docRef.SetAsync(data);
             Console.WriteLine($"✅ Đã thêm document vào '{collectionName}' với ID: {docRef.Id}");
+
+            // 🔹 Trả về ID document vừa tạo
+            return docRef.Id;
         }
 
         // ============================================================

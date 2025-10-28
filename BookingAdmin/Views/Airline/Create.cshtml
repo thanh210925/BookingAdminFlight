@@ -1,30 +1,67 @@
 ﻿@model BookingAdmin.Models.Airline
 @{
-    ViewData["Title"] = "Thêm Hãng bay";
+    ViewData["Title"] = "Thêm hãng bay mới";
+    Layout = "_Layout";
 }
 
 <div class="container mt-4">
-    <h3 class="fw-bold text-success mb-3">➕ Thêm Hãng bay</h3>
+    <div class="card shadow-lg border-0 rounded-4 p-4">
+        <h2 class="fw-bold text-primary mb-4 text-center">
+            ✈️ Thêm hãng bay mới
+        </h2>
 
-    <form asp-action="Create" method="post" class="card p-4 shadow-sm">
-        <div class="mb-3">
-            <label class="form-label">Tên hãng</label>
-            <input asp-for="Name" class="form-control" required />
-        </div>
+        <form asp-action="Create" method="post">
+            <!-- 🔹 Tên hãng bay -->
+            <div class="form-group mb-3">
+                <label class="form-label fw-semibold">Tên hãng bay</label>
+                <input asp-for="Name" class="form-control" placeholder="VD: Bamboo Airways, VietJet Air..." required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Mã hãng</label>
-            <input asp-for="Code" class="form-control" />
-        </div>
+            <!-- 🔹 Mã hãng -->
+            <div class="form-group mb-3">
+                <label class="form-label fw-semibold">Mã hãng (Code)</label>
+                <input asp-for="Code" class="form-control" placeholder="VD: QH, VJ, VN..." required />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Quốc gia</label>
-            <input asp-for="Country" class="form-control" />
-        </div>
+            <!-- 🔹 Quốc gia (tùy chọn) -->
+            <div class="form-group mb-3">
+                <label class="form-label fw-semibold">Quốc gia</label>
+                <input name="Country" class="form-control" placeholder="VD: Việt Nam, Singapore..." />
+                <small class="text-muted">Nếu không cần, có thể để trống.</small>
+            </div>
 
-        <div class="text-end">
-            <button type="submit" class="btn btn-success">Lưu</button>
-            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
-        </div>
-    </form>
+            <hr class="my-4" />
+
+            <h5 class="fw-bold text-secondary mb-3">🪑 Cấu hình máy bay</h5>
+
+            <!-- 🔹 Số hàng ghế -->
+            <div class="form-group mb-3">
+                <label class="form-label">Số hàng ghế</label>
+                <input asp-for="SeatRows" type="number" class="form-control" min="1" placeholder="VD: 50" required />
+                <span asp-validation-for="SeatRows" class="text-danger"></span>
+            </div>
+
+            <!-- 🔹 Số ghế mỗi hàng -->
+            <div class="form-group mb-4">
+                <label class="form-label">Số ghế mỗi hàng</label>
+                <input asp-for="SeatCols" type="number" class="form-control" min="1" placeholder="VD: 4" required />
+                <span asp-validation-for="SeatCols" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">
+                    ⬅️ Quay lại danh sách
+                </a>
+                <button type="submit" class="btn btn-success px-4">
+                    💾 Lưu và tạo ghế
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

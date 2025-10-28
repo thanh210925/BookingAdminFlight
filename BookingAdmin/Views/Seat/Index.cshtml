@@ -1,0 +1,68 @@
+﻿@model IEnumerable<BookingAdmin.Models.Seat>
+@{
+    ViewData["Title"] = "Danh sách ghế";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-primary mb-4 text-center">🪑 Danh sách ghế</h2>
+
+    <div class="table-responsive shadow-sm">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Ghế</th>
+                    <th>Hạng</th>
+                    <th>Trạng thái</th>
+                    <th>Hãng bay</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var seat in Model)
+                {
+                    <tr>
+                        <td>@seat.SeatCode</td>
+
+                        <td>
+                            @if (seat.Class == "Business")
+                            {
+                                <span class="badge bg-warning text-dark fw-bold">Business</span>
+                            }
+                            else if (seat.Class == "First Class")
+                            {
+                                <span class="badge bg-info text-dark fw-bold">First Class</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Economy</span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (seat.Status == "Trống")
+                            {
+                                <span class="badge bg-success">Trống</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Đã đặt</span>
+                            }
+                        </td>
+
+                        <td>@seat.AirlineName</td>
+
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@seat.Id" class="btn btn-warning btn-sm me-1">
+                                ✏️
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@seat.Id" class="btn btn-danger btn-sm">
+                                🗑️
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

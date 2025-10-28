@@ -1,47 +1,45 @@
 ﻿@model IEnumerable<BookingAdmin.Models.Airline>
 @{
-    ViewData["Title"] = "Quản lý Hãng bay";
+    ViewData["Title"] = "Danh sách hãng bay";
 }
 
 <div class="container mt-4">
-    <h2 class="fw-bold text-primary mb-3">✈️ Danh sách Hãng bay</h2>
-
-    <div class="text-end mb-3">
-        <a asp-action="Create" class="btn btn-success">
-            <i class="bi bi-plus-circle"></i> Thêm Hãng bay
-        </a>
-    </div>
-
-    @if (!Model.Any())
+    @if (TempData["Success"] != null)
     {
-        <div class="alert alert-info">Chưa có hãng bay nào.</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     }
-    else
-    {
-        <table class="table table-hover shadow-sm">
-            <thead class="table-primary text-center">
+
+    <h2 class="fw-bold text-primary mb-3">🛫 Danh sách hãng bay</h2>
+
+    <a class="btn btn-success mb-3" asp-action="Create">➕ Thêm hãng mới</a>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Tên hãng</th>
+                <th>Mã</th>
+                <th>Số hàng</th>
+                <th>Số ghế/hàng</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
                 <tr>
-                    <th>Tên hãng</th>
-                    <th>Mã</th>
-                    <th>Quốc gia</th>
-                    <th>Thao tác</th>
+                    <td>@item.Name</td>
+                    <td>@item.Code</td>
+                    <td>@item.SeatRows</td>
+                    <td>@item.SeatCols</td>
+                    <td>
+                        <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id">✏️</a>
+                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">🗑️</a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody class="text-center">
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.Name</td>
-                        <td>@item.Code</td>
-                        <td>@item.Country</td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">✏️</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm"
-                               onclick="return confirm('Xóa hãng bay này?');">🗑️</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+            }
+        </tbody>
+    </table>
 </div>
