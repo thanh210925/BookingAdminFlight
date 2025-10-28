@@ -1,0 +1,123 @@
+﻿@model IEnumerable<BookingAdmin.Models.Ticket>
+
+@{
+    ViewData["Title"] = "Quản lý vé máy bay";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-primary mb-3">✈️ Danh sách vé máy bay</h2>
+
+    <div class="mb-3 text-end">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Thêm vé mới
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            Hiện chưa có vé nào trong hệ thống.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped table-hover align-middle shadow-sm">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>Hãng bay</th>
+                    <th>Điểm đi</th>
+                    <th>Điểm đến</th>
+                    <th>Ngày đi</th>
+                    <th>Giờ đi</th>
+                    <th>Ngày về</th>
+                    <th>Giá vé (VNĐ)</th>
+                    <th>Hạng ghế</th>
+                    <th>Loại vé</th> <!-- 🆕 Thêm cột loại vé -->
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    <tr class="text-center">
+                        <td>
+                            @t.Airline
+                            @if (!string.IsNullOrEmpty(t.ReturnDate))
+                            {
+                                <span class="badge bg-info text-dark ms-1">
+                                    ↺ Khứ hồi
+                                </span>
+                            }
+                        </td>
+                        <td>@t.DepartureAirport</td>
+                        <td>@t.ArrivalAirport</td>
+
+                        <!-- Ngày đi -->
+                        <td>
+                            @{
+                                string depDate = "-";
+                                if (!string.IsNullOrEmpty(t.DepartureDate))
+                                {
+                                    DateTime parsedDate;
+                                    if (DateTime.TryParse(t.DepartureDate, out parsedDate))
+                                        depDate = parsedDate.ToString("dd/MM/yyyy");
+                                    else
+                                        depDate = t.DepartureDate;
+                                }
+                            }
+                            @depDate
+                        </td>
+
+                        <!-- Giờ đi -->
+                        <td>@(string.IsNullOrEmpty(t.DepartureTime) ? "-" : t.DepartureTime)</td>
+
+                        <!-- Ngày về -->
+                        <td>
+                            @{
+                                string returnDate = "-";
+                                if (!string.IsNullOrEmpty(t.ReturnDate))
+                                {
+                                    DateTime parsedReturn;
+                                    if (DateTime.TryParse(t.ReturnDate, out parsedReturn))
+                                        returnDate = parsedReturn.ToString("dd/MM/yyyy");
+                                    else
+                                        returnDate = t.ReturnDate;
+                                }
+                            }
+                            @returnDate
+                        </td>
+
+                        <!-- Giá vé -->
+                        <td>@String.Format("{0:N0}", t.Price)</td>
+
+                        <!-- Hạng ghế -->
+                        <td>@t.SeatClass</td>
+
+                        <!-- Loại vé -->
+                        <td>
+                            @if (!string.IsNullOrEmpty(t.ReturnDate))
+                            {
+                                <span class="badge bg-primary">Khứ hồi</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Một chiều</span>
+                            }
+                        </td>
+
+                        <!-- Nút thao tác -->
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-warning btn-sm">
+                                ✏️ Sửa
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@t.Id" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Bạn có chắc muốn xóa vé này không?');">
+                                🗑 Xóa
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

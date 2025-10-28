@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BookingAdmin</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- Custom -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- 🌟 NAVIGATION BAR -->
+    <header>
+        <nav class="navbar navbar-expand-lg shadow-sm">
+            <div class="container-fluid px-4">
+                <!-- 🔹 BÊN TRÁI -->
+                <div class="d-flex align-items-center">
+                    <a class="navbar-brand me-3" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-airplane-engines"></i> BookingAdmin
+                    </a>
+                    <ul class="navbar-nav d-none d-lg-flex">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door"></i> Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Ticket" asp-action="Index">
+                                <i class="bi bi-ticket-perforated"></i> Vé
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Luggage" asp-action="Index">
+                                <i class="bi bi-bag-check"></i> Hành lý
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="User" asp-action="Index">
+                                <i class="bi bi-people"></i> Người dùng
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 🔹 NÚT TOGGLE MOBILE -->
+                <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 🌟 MAIN CONTENT -->
+    <div class="container content-wrapper mt-4 mb-5">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- 🌟 FOOTER GHIM CỐ ĐỊNH -->
+    <footer class="shadow-sm">
+        <div class="container">
+            &copy; 2025 - <strong>BookingAdmin</strong> |
+            <a asp-controller="Home" asp-action="Privacy">Chính sách bảo mật</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

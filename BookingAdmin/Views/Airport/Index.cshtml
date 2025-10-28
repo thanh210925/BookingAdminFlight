@@ -1,0 +1,49 @@
+﻿@model IEnumerable<BookingAdmin.Models.Airport>
+@{
+    ViewData["Title"] = "Quản lý sân bay";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-center text-primary mb-4">🛫 Danh sách sân bay</h2>
+
+    <div class="mb-3 text-end">
+        <a asp-action="Create" class="btn btn-success px-4">➕ Thêm sân bay</a>
+    </div>
+
+    <table class="table table-hover table-bordered align-middle">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>Mã sân bay</th>
+                <th>Tên sân bay</th>
+                <th>Thành phố</th>
+                <th>Quốc gia</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Code</td>
+                        <td>@item.Name</td>
+                        <td>@item.City</td>
+                        <td>@item.Country</td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">✏️ Sửa</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">🗑️ Xóa</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted fst-italic">Chưa có dữ liệu sân bay nào.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

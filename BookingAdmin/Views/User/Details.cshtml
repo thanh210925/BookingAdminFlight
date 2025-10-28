@@ -1,0 +1,22 @@
+﻿@model BookingAdmin.Models.User
+
+<div class="container mt-4">
+    <h3 class="fw-bold mb-3">👤 Thông tin người dùng</h3>
+
+    <dl class="row">
+        <dt class="col-sm-3">Họ tên</dt>
+        <dd class="col-sm-9">@Model.Name</dd>
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+        <dt class="col-sm-3">Số điện thoại</dt>
+        <dd class="col-sm-9">@Model.Phone</dd>
+        <dt class="col-sm-3">Ngày sinh</dt>
+        <dd class="col-sm-9">@Model.Birthday</dd>
+        <dt class="col-sm-3">Giới tính</dt>
+        <dd class="col-sm-9">@Model.Gender</dd>
+        <dt class="col-sm-3">Vai trò</dt>
+        <dd class="col-sm-9"><span class="badge bg-primary">@Model.Role</span></dd>
+    </dl>
+
+    <a asp-action="Index" class="btn btn-secondary">⬅ Quay lại</a>
+</div>

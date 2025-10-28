@@ -1,0 +1,30 @@
+﻿@model BookingAdmin.Models.Airline
+@{
+    ViewData["Title"] = "Thêm Hãng bay";
+}
+
+<div class="container mt-4">
+    <h3 class="fw-bold text-success mb-3">➕ Thêm Hãng bay</h3>
+
+    <form asp-action="Create" method="post" class="card p-4 shadow-sm">
+        <div class="mb-3">
+            <label class="form-label">Tên hãng</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mã hãng</label>
+            <input asp-for="Code" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Quốc gia</label>
+            <input asp-for="Country" class="form-control" />
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-success">Lưu</button>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>

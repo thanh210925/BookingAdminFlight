@@ -1,0 +1,35 @@
+﻿@model BookingAdmin.Models.Luggage
+@{
+    ViewData["Title"] = "Sửa hành lý";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-warning mb-3">✏️ Sửa hành lý</h2>
+
+    <form asp-action="Edit" method="post" class="card shadow p-4">
+        <input type="hidden" asp-for="Id" />
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Tên hành lý</label>
+                <input asp-for="Name" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Trọng lượng (kg)</label>
+                <input asp-for="Weight" type="number" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Giá (VNĐ)</label>
+                <input asp-for="Price" type="number" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Mô tả</label>
+                <input asp-for="Description" class="form-control" />
+            </div>
+        </div>
+
+        <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-warning">💾 Lưu thay đổi</button>
+            <a asp-action="Index" class="btn btn-secondary">⬅️ Quay lại</a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,14 @@
+﻿@model Dictionary<string, object>
+
+<div class="container mt-5">
+    <h2 class="fw-bold mb-4 text-primary">✈️ Thống kê chuyến bay (FlightStatistics)</h2>
+
+    <div class="card shadow-sm p-4 border-0">
+        <h5><strong>Tổng doanh thu:</strong> @Model["totalRevenue"]</h5>
+        <h5><strong>Tổng số vé đã bán:</strong> @Model["totalTickets"]</h5>
+    </div>
+
+    <div class="alert alert-success mt-3">
+        ✅ Dữ liệu được lấy trực tiếp từ Firestore (Document: <b>FlightStatistics/Summary</b>)
+    </div>
+</div>

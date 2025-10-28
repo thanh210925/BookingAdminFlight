@@ -1,0 +1,68 @@
+﻿@model BookingAdmin.Models.Ticket
+@{
+    ViewData["Title"] = "Chỉnh sửa vé";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-warning mb-4">✏️ Chỉnh sửa vé máy bay</h2>
+
+    <form asp-action="Edit" method="post" class="shadow p-4 bg-light rounded">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Hãng bay</label>
+                <input asp-for="Airline" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Sân bay đi</label>
+                <input asp-for="DepartureAirport" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Sân bay đến</label>
+                <input asp-for="ArrivalAirport" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Ngày đi</label>
+                <input asp-for="DepartureDate" type="date" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Giờ đi</label>
+                <input asp-for="DepartureTime" type="time" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Giờ đến</label>
+                <input asp-for="ArrivalTime" type="time" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Ngày về</label>
+                <input asp-for="ReturnDate" type="date" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Giá vé (VNĐ)</label>
+                <input asp-for="Price" type="number" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Hạng ghế</label>
+                <select asp-for="SeatClass" class="form-select">
+                    <option>Phổ thông</option>
+                    <option>Thương gia</option>
+                    <option>Hạng nhất</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="text-end mt-4">
+            <button type="submit" class="btn btn-warning">💾 Cập nhật</button>
+            <a asp-action="Index" class="btn btn-secondary">⬅️ Quay lại</a>
+        </div>
+    </form>
+</div>

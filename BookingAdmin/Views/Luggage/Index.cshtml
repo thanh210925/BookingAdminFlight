@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BookingAdmin.Models.Luggage>
+
+@{
+    ViewData["Title"] = "Danh sách hành lý";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold text-primary">🧳 Danh sách hành lý</h2>
+        <a asp-action="Create" class="btn btn-success">➕ Thêm hành lý</a>
+    </div>
+
+    <table class="table table-hover shadow-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Tên hành lý</th>
+                <th>Trọng lượng (kg)</th>
+                <th>Giá (VNĐ)</th>
+                <th>Mô tả</th>
+                <th class="text-center">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Weight</td>
+                    <td>@String.Format("{0:N0}", item.Price)</td>
+                    <td>@item.Description</td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning me-2">✏️ Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">🗑️ Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

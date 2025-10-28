@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Trang quản trị hệ thống";
+}
+
+<div class="container mt-5">
+    <h2 class="fw-bold text-center text-primary mb-4">🎛️ Trang quản trị BookingAdmin</h2>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-3">
+            <a asp-controller="Ticket" asp-action="Index" class="card text-center shadow-sm dashboard-card">
+                <div class="card-body">
+                    <i class="bi bi-ticket-perforated fs-1 text-primary"></i>
+                    <h5 class="mt-2 fw-bold">Quản lý Vé</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a asp-controller="Luggage" asp-action="Index" class="card text-center shadow-sm dashboard-card">
+                <div class="card-body">
+                    <i class="bi bi-bag-check fs-1 text-success"></i>
+                    <h5 class="mt-2 fw-bold">Quản lý Hành lý</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a asp-controller="User" asp-action="Index" class="card text-center shadow-sm dashboard-card">
+                <div class="card-body">
+                    <i class="bi bi-people fs-1 text-info"></i>
+                    <h5 class="mt-2 fw-bold">Quản lý Người dùng</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a asp-controller="Airline" asp-action="Index" class="card text-center shadow-sm dashboard-card">
+                <div class="card-body">
+                    <i class="bi bi-building fs-1 text-warning"></i>
+                    <h5 class="mt-2 fw-bold">Quản lý Hãng bay</h5>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a asp-controller="Airport" asp-action="Index" class="card text-center shadow-sm dashboard-card">
+                <div class="card-body">
+                    <i class="bi bi-geo-alt fs-1 text-danger"></i>
+                    <h5 class="mt-2 fw-bold">Quản lý Sân bay</h5>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-card {
+        transition: all 0.3s ease-in-out;
+        border: none;
+        border-radius: 12px;
+        text-decoration: none;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+</style>

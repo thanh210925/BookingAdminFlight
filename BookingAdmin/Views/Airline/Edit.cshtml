@@ -1,0 +1,33 @@
+﻿@model BookingAdmin.Models.Airline
+@{
+    ViewData["Title"] = "Chỉnh sửa hãng bay";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center fw-bold text-primary mb-4">✈️ Chỉnh sửa hãng bay</h2>
+
+    <form asp-action="Edit" method="post" class="shadow p-4 rounded bg-light">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group mb-3">
+            <label class="form-label">Tên hãng</label>
+            <input asp-for="Name" class="form-control" placeholder="Nhập tên hãng bay" required />
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label">Mã hãng</label>
+            <input asp-for="Code" class="form-control" placeholder="VD: VN, QH, VJ..." required />
+        </div>
+
+        <div class="form-group mb-4">
+            <label class="form-label">Quốc gia</label>
+            <input asp-for="Country" class="form-control" placeholder="Nhập quốc gia" required />
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success px-4">💾 Lưu thay đổi</button>
+            <a asp-action="Index" class="btn btn-secondary px-4 ms-2">⬅️ Quay lại</a>
+        </div>
+    </form>
+</div>

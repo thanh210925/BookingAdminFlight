@@ -1,0 +1,33 @@
+﻿@model BookingAdmin.Models.Airport
+@{
+    ViewData["Title"] = "Xóa sân bay";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center fw-bold text-danger mb-4">⚠️ Xác nhận xóa sân bay</h2>
+
+    <div class="card border-danger shadow-sm p-4">
+        <dl class="row">
+            <dt class="col-sm-3">Tên sân bay</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">Mã sân bay</dt>
+            <dd class="col-sm-9">@Model.Code</dd>
+
+            <dt class="col-sm-3">Thành phố</dt>
+            <dd class="col-sm-9">@Model.City</dd>
+
+            <dt class="col-sm-3">Quốc gia</dt>
+            <dd class="col-sm-9">@Model.Country</dd>
+        </dl>
+
+        <form asp-action="DeleteConfirmed" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-danger px-4">🗑️ Xóa</button>
+                <a asp-action="Index" class="btn btn-secondary px-4 ms-2">⬅️ Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>

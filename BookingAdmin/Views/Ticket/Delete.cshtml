@@ -1,0 +1,29 @@
+﻿@model BookingAdmin.Models.Ticket
+@{
+    ViewData["Title"] = "Xóa vé";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-danger mb-3">🗑 Xóa vé máy bay</h2>
+
+    <div class="alert alert-warning shadow-sm p-3">
+        <h5 class="fw-bold">⚠️ Bé có chắc muốn xóa vé này không?</h5>
+        <p class="mb-1"><strong>Hãng bay:</strong> @Model.Airline</p>
+        <p class="mb-1"><strong>Điểm đi:</strong> @Model.DepartureAirport</p>
+        <p class="mb-1"><strong>Điểm đến:</strong> @Model.ArrivalAirport</p>
+        <p class="mb-1"><strong>Ngày đi:</strong> @Model.DepartureDate</p>
+        <p class="mb-1"><strong>Giờ đi:</strong> @Model.DepartureTime</p>
+        <p class="mb-1"><strong>Hạng ghế:</strong> @Model.SeatClass</p>
+        <p class="mb-0"><strong>Giá vé:</strong> @String.Format("{0:N0} VNĐ", Model.Price)</p>
+    </div>
+
+    <form asp-action="DeleteConfirmed" method="post" class="mt-3">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash3"></i> Xóa
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Hủy
+        </a>
+    </form>
+</div>

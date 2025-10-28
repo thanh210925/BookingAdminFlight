@@ -1,0 +1,47 @@
+﻿@model IEnumerable<BookingAdmin.Models.User>
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-center mb-4">👥 Quản lý người dùng</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>SĐT</th>
+                <th>Giới tính</th>
+                <th>Ngày sinh</th>
+                <th>Vai trò</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td>@u.Name</td>
+                    <td>@u.Email</td>
+                    <td>@u.Phone</td>
+                    <td>@u.Gender</td>
+                    <td>@u.Birthday</td>
+                    <td>
+                        <span class="badge bg-primary">@u.Role</span>
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@u.Id" class="btn btn-sm btn-info">👁 Xem</a>
+                        <a asp-action="Delete" asp-route-id="@u.Id" class="btn btn-sm btn-danger">🗑 Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

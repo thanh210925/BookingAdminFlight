@@ -1,0 +1,19 @@
+﻿@model BookingAdmin.Models.Luggage
+@{
+    ViewData["Title"] = "Xóa hành lý";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-danger mb-3">🗑️ Xóa hành lý</h2>
+    <div class="card shadow p-4">
+        <p>Bé có chắc chắn muốn xóa hành lý <strong>@Model.Name</strong> không?</p>
+        <p class="text-muted">Thao tác này sẽ xóa vĩnh viễn khỏi Firestore.</p>
+
+        <form asp-action="Delete" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">🗑️ Xóa vĩnh viễn</button>
+            <a asp-action="Index" class="btn btn-secondary">⬅️ Hủy</a>
+        </form>
+    </div>
+</div>
