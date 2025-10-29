@@ -127,5 +127,20 @@ namespace BookingAdmin.Services
 
             return snapshot.ToDictionary();
         }
+        // ============================================================
+        // 🟢 CẬP NHẬT MỘT FIELD CỤ THỂ (Không ghi đè toàn bộ document)
+        // ============================================================
+        public async Task UpdateFieldAsync<T>(string collectionName, string documentId, string fieldName, T value)
+        {
+            var docRef = _db.Collection(collectionName).Document(documentId);
+            var updates = new Dictionary<string, object>
+    {
+        { fieldName, value }
+    };
+
+            await docRef.UpdateAsync(updates);
+            Console.WriteLine($"🔄 Đã cập nhật field '{fieldName}' của document '{documentId}' trong collection '{collectionName}'");
+        }
+
     }
 }

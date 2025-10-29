@@ -1,0 +1,37 @@
+﻿@model BookingAdmin.Models.TicketOrder
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng vé";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-primary mb-4 text-center">🔍 Chi tiết Đơn hàng Vé</h2>
+
+    <div class="card shadow border-0 rounded-4 p-4">
+        <p><strong>Khách hàng:</strong> @Model.FullName (@Model.Email)</p>
+        <p><strong>CMND:</strong> @Model.Cmnd</p>
+        <p><strong>Hãng bay:</strong> @Model.Airline</p>
+        <p><strong>Chặng bay:</strong> @Model.Departure → @Model.Destination</p>
+        <p><strong>Ngày đi:</strong> @Model.DepartureDate</p>
+        <p><strong>Ngày về:</strong> @Model.ReturnDate</p>
+        <p><strong>Ghế đi:</strong> @string.Join(", ", Model.DepartureSeats ?? new List<string>())</p>
+        <p><strong>Ghế về:</strong> @string.Join(", ", Model.ReturnSeats ?? new List<string>())</p>
+        <p><strong>Hạng ghế:</strong> @Model.SeatClass</p>
+        <p><strong>Trạng thái:</strong> @Model.Status</p>
+        <p><strong>Tổng tiền:</strong> @Model.TotalPrice.ToString("N0") ₫</p>
+
+        <p><strong>Hình thanh toán:</strong></p>
+        @if (!string.IsNullOrEmpty(Model.PaymentImageUrl))
+        {
+            <img src="@Model.PaymentImageUrl" class="rounded shadow" style="max-width:400px;" />
+        }
+        else
+        {
+            <p class="text-muted">Không có ảnh</p>
+        }
+
+        <div class="mt-4">
+            <a asp-action="Index" class="btn btn-secondary">⬅ Quay lại</a>
+        </div>
+    </div>
+</div>
