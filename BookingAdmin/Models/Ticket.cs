@@ -17,13 +17,14 @@ namespace BookingAdmin.Models
         [FirestoreProperty("departureAirport")]
         public string DepartureAirport { get; set; }
 
-        [FirestoreProperty("departure date")]
+        // 🔹 Thống nhất với Android
+        [FirestoreProperty("departureDate")]
         public string DepartureDate { get; set; }
 
-        [FirestoreProperty("departure time")]
+        [FirestoreProperty("departureTime")]
         public string DepartureTime { get; set; }
 
-        [FirestoreProperty("arrival time")]
+        [FirestoreProperty("arrivalTime")]
         public string ArrivalTime { get; set; }
 
         [FirestoreProperty("price")]
