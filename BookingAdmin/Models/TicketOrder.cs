@@ -34,13 +34,13 @@ namespace BookingAdmin.Models
         [FirestoreProperty("destination")]
         public string Destination { get; set; }
 
-        [FirestoreProperty("departure date")]
+        [FirestoreProperty("departDate")]
         public string DepartureDate { get; set; }
 
         [FirestoreProperty("returnDate")]
         public string ReturnDate { get; set; }
 
-        [FirestoreProperty("departureSeats")]
+        [FirestoreProperty("departSeats")]
         public List<string> DepartureSeats { get; set; }
 
         [FirestoreProperty("returnSeats")]
