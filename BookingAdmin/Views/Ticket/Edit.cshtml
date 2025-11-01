@@ -1,68 +1,139 @@
 ﻿@model BookingAdmin.Models.Ticket
 @{
-    ViewData["Title"] = "Chỉnh sửa vé";
+    ViewData["Title"] = "Chỉnh sửa vé máy bay";
+    var airlines = ViewBag.Airlines as List<BookingAdmin.Models.Airline>;
+    var airports = ViewBag.Airports as List<BookingAdmin.Models.Airport>;
 }
 
-<div class="container mt-4">
-    <h2 class="fw-bold text-warning mb-4">✏️ Chỉnh sửa vé máy bay</h2>
+<div class="container mt-5">
+    <h2 class="fw-bold text-warning mb-4 text-center">✏️ Chỉnh sửa vé máy bay</h2>
 
-    <form asp-action="Edit" method="post" class="shadow p-4 bg-light rounded">
+    @using (Html.BeginForm("Edit", "Ticket", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
 
-        <div class="row g-3">
+        <div class="row g-3 shadow p-4 bg-light rounded-4">
+            <!-- 🔹 Hãng bay -->
             <div class="col-md-6">
-                <label class="form-label fw-semibold">Hãng bay</label>
-                <input asp-for="Airline" class="form-control" />
+                <label asp-for="Airline" class="form-label fw-semibold">Hãng bay</label>
+                <select asp-for="Airline" class="form-select" required>
+                    <option value="" disabled>-- Chọn hãng bay --</option>
+                    @foreach (var a in airlines)
+                    {
+                        <option value="@a.Name" selected="@(Model.Airline == a.Name)">
+                            @a.Name
+                        </option>
+                    }
+                </select>
             </div>
 
+            <!-- 🔹 Loại vé -->
             <div class="col-md-6">
-                <label class="form-label fw-semibold">Sân bay đi</label>
-                <input asp-for="DepartureAirport" class="form-control" />
+                <label class="form-label fw-semibold">Loại vé</label>
+                <select asp-for="FlightType" class="form-select" id="FlightType" required>
+                    <option value="Một chiều" selected="@(Model.FlightType == "Một chiều")">Một chiều</option>
+                    <option value="Khứ hồi" selected="@(Model.FlightType == "Khứ hồi")">Khứ hồi</option>
+                </select>
             </div>
 
+            <!-- 🔹 Điểm đi -->
             <div class="col-md-6">
-                <label class="form-label fw-semibold">Sân bay đến</label>
-                <input asp-for="ArrivalAirport" class="form-control" />
+                <label asp-for="DepartureAirport" class="form-label fw-semibold">Điểm đi</label>
+                <select asp-for="DepartureAirport" class="form-select" required>
+                    <option value="" disabled>-- Chọn sân bay đi --</option>
+                    @foreach (var ap in airports)
+                    {
+                        var value = $"{ap.Code} - {ap.City}";
+                        <option value="@value" selected="@(Model.DepartureAirport == value)">
+                            @value
+                        </option>
+                    }
+                </select>
             </div>
 
+            <!-- 🔹 Điểm đến -->
             <div class="col-md-6">
-                <label class="form-label fw-semibold">Ngày đi</label>
-                <input asp-for="DepartureDate" type="date" class="form-control" />
+                <label asp-for="ArrivalAirport" class="form-label fw-semibold">Điểm đến</label>
+                <select asp-for="ArrivalAirport" class="form-select" required>
+                    <option value="" disabled>-- Chọn sân bay đến --</option>
+                    @foreach (var ap in airports)
+                    {
+                        var value = $"{ap.Code} - {ap.City}";
+                        <option value="@value" selected="@(Model.ArrivalAirport == value)">
+                            @value
+                        </option>
+                    }
+                </select>
             </div>
 
+            <!-- 🔹 Ngày đi -->
             <div class="col-md-6">
-                <label class="form-label fw-semibold">Giờ đi</label>
-                <input asp-for="DepartureTime" type="time" class="form-control" />
+                <label asp-for="DepartureDate" class="form-label fw-semibold">Ngày đi</label>
+                <input asp-for="DepartureDate" type="date" class="form-control" required />
             </div>
 
+            <!-- 🔹 Giờ đi -->
             <div class="col-md-6">
-                <label class="form-label fw-semibold">Giờ đến</label>
-                <input asp-for="ArrivalTime" type="time" class="form-control" />
+                <label asp-for="DepartureTime" class="form-label fw-semibold">Giờ đi</label>
+                <input asp-for="DepartureTime" type="time" class="form-control" required />
             </div>
 
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Ngày về</label>
+            <!-- 🔹 Ngày về -->
+            <div class="col-md-6" id="returnDateField">
+                <label asp-for="ReturnDate" class="form-label fw-semibold">Ngày về</label>
                 <input asp-for="ReturnDate" type="date" class="form-control" />
             </div>
 
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Giá vé (VNĐ)</label>
-                <input asp-for="Price" type="number" class="form-control" />
+            <!-- 🔹 Giờ về -->
+            <div class="col-md-6" id="returnTimeField">
+                <label asp-for="ReturnTime" class="form-label fw-semibold">Giờ về</label>
+                <input asp-for="ReturnTime" type="time" class="form-control" />
             </div>
 
+            <!-- 🔹 Hạng ghế -->
             <div class="col-md-6">
-                <label class="form-label fw-semibold">Hạng ghế</label>
-                <select asp-for="SeatClass" class="form-select">
-                    <option>Phổ thông</option>
-                    <option>Thương gia</option>
-                    <option>Hạng nhất</option>
+                <label asp-for="SeatClass" class="form-label fw-semibold">Hạng ghế</label>
+                <select asp-for="SeatClass" class="form-select" required>
+                    <option value="" disabled>-- Chọn hạng ghế --</option>
+                    <option selected="@(Model.SeatClass == "Phổ thông")">Phổ thông</option>
+                    <option selected="@(Model.SeatClass == "Thương gia")">Thương gia</option>
+                    <option selected="@(Model.SeatClass == "Hạng nhất")">Hạng nhất</option>
                 </select>
             </div>
+
+            <!-- 🔹 Giá vé -->
+            <div class="col-md-6">
+                <label asp-for="Price" class="form-label fw-semibold">Giá vé (VNĐ)</label>
+                <input asp-for="Price" type="number" class="form-control" min="1000" step="1000" required />
+            </div>
         </div>
 
-        <div class="text-end mt-4">
-            <button type="submit" class="btn btn-warning">💾 Cập nhật</button>
-            <a asp-action="Index" class="btn btn-secondary">⬅️ Quay lại</a>
+        <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-warning px-4 py-2 fw-semibold">💾 Cập nhật vé</button>
+            <a asp-action="Index" class="btn btn-secondary px-4 py-2 fw-semibold">⬅️ Quay lại</a>
         </div>
-    </form>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        // Hiển thị ngày & giờ về nếu là khứ hồi
+        const flightType = document.getElementById("FlightType");
+        const returnDate = document.getElementById("returnDateField");
+        const returnTime = document.getElementById("returnTimeField");
+
+        function toggleReturnFields() {
+            if (flightType.value === "Khứ hồi") {
+                returnDate.style.display = "block";
+                returnTime.style.display = "block";
+            } else {
+                returnDate.style.display = "none";
+                returnTime.style.display = "none";
+            }
+        }
+
+        flightType.addEventListener("change", toggleReturnFields);
+        toggleReturnFields();
+    </script>
+}

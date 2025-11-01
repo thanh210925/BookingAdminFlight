@@ -12,7 +12,7 @@
     {
         @Html.AntiForgeryToken()
 
-        <div class="row g-3">
+        <div class="row g-3 shadow p-4 bg-light rounded-4">
             <!-- 🔹 Hãng bay -->
             <div class="col-md-6">
                 <label asp-for="Airline" class="form-label fw-semibold">Hãng bay</label>
@@ -23,7 +23,15 @@
                         <option value="@a.Name">@a.Name</option>
                     }
                 </select>
-                <span asp-validation-for="Airline" class="text-danger"></span>
+            </div>
+
+            <!-- 🔹 Loại vé -->
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Loại vé</label>
+                <select id="FlightType" name="FlightType" class="form-select" required>
+                    <option value="Một chiều" selected>Một chiều</option>
+                    <option value="Khứ hồi">Khứ hồi</option>
+                </select>
             </div>
 
             <!-- 🔹 Điểm đi -->
@@ -36,7 +44,6 @@
                         <option value="@($"{ap.Code} - {ap.City}")">@($"{ap.Code} - {ap.City}")</option>
                     }
                 </select>
-                <span asp-validation-for="DepartureAirport" class="text-danger"></span>
             </div>
 
             <!-- 🔹 Điểm đến -->
@@ -49,28 +56,30 @@
                         <option value="@($"{ap.Code} - {ap.City}")">@($"{ap.Code} - {ap.City}")</option>
                     }
                 </select>
-                <span asp-validation-for="ArrivalAirport" class="text-danger"></span>
             </div>
 
             <!-- 🔹 Ngày đi -->
             <div class="col-md-6">
                 <label asp-for="DepartureDate" class="form-label fw-semibold">Ngày đi</label>
                 <input asp-for="DepartureDate" type="date" class="form-control" required />
-                <span asp-validation-for="DepartureDate" class="text-danger"></span>
             </div>
 
             <!-- 🔹 Giờ đi -->
             <div class="col-md-6">
                 <label asp-for="DepartureTime" class="form-label fw-semibold">Giờ đi</label>
                 <input asp-for="DepartureTime" type="time" class="form-control" required />
-                <span asp-validation-for="DepartureTime" class="text-danger"></span>
             </div>
 
             <!-- 🔹 Ngày về -->
-            <div class="col-md-6">
-                <label asp-for="ReturnDate" class="form-label fw-semibold">Ngày về (nếu có)</label>
+            <div class="col-md-6" id="returnDateField" style="display:none;">
+                <label asp-for="ReturnDate" class="form-label fw-semibold">Ngày về</label>
                 <input asp-for="ReturnDate" type="date" class="form-control" />
-                <span asp-validation-for="ReturnDate" class="text-danger"></span>
+            </div>
+
+            <!-- 🔹 Giờ về -->
+            <div class="col-md-6" id="returnTimeField" style="display:none;">
+                <label asp-for="ReturnTime" class="form-label fw-semibold">Giờ về</label>
+                <input asp-for="ReturnTime" type="time" class="form-control" />
             </div>
 
             <!-- 🔹 Hạng ghế -->
@@ -82,14 +91,12 @@
                     <option>Thương gia</option>
                     <option>Hạng nhất</option>
                 </select>
-                <span asp-validation-for="SeatClass" class="text-danger"></span>
             </div>
 
             <!-- 🔹 Giá vé -->
             <div class="col-md-6">
                 <label asp-for="Price" class="form-label fw-semibold">Giá vé (VNĐ)</label>
                 <input asp-for="Price" type="number" class="form-control" min="1000" step="1000" placeholder="VD: 1200000" required />
-                <span asp-validation-for="Price" class="text-danger"></span>
             </div>
         </div>
 
@@ -102,4 +109,25 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Ẩn/hiện ngày & giờ về khi chọn loại vé
+        const flightType = document.getElementById("FlightType");
+        const returnDate = document.getElementById("returnDateField");
+        const returnTime = document.getElementById("returnTimeField");
+
+        function toggleReturnFields() {
+            if (flightType.value === "Khứ hồi") {
+                returnDate.style.display = "block";
+                returnTime.style.display = "block";
+            } else {
+                returnDate.style.display = "none";
+                returnTime.style.display = "none";
+                document.getElementById("ReturnDate").value = "";
+                document.getElementById("ReturnTime").value = "";
+            }
+        }
+
+        flightType.addEventListener("change", toggleReturnFields);
+        toggleReturnFields();
+    </script>
 }

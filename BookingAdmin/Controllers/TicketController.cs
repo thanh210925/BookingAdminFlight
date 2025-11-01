@@ -15,24 +15,19 @@ namespace BookingAdmin.Controllers
             _firestore = new FirestoreService();
         }
 
-        // ✅ Lấy dữ liệu trong collection "tickets"
+        // ✅ Danh sách vé
         public async Task<IActionResult> Index()
         {
             var items = await _firestore.GetAllAsync<Ticket>("tickets");
             return View(items);
         }
 
-        // 🟢 FORM THÊM
+        // 🟢 Hiển thị form thêm
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            // 🔹 Lấy dữ liệu sân bay & hãng bay từ Firestore
-            var airlines = await _firestore.GetAllAsync<Airline>("Airlines");
-            var airports = await _firestore.GetAllAsync<Airport>("Airports");
-
-            ViewBag.Airlines = airlines;
-            ViewBag.Airports = airports;
-
+            ViewBag.Airlines = await _firestore.GetAllAsync<Airline>("Airlines");
+            ViewBag.Airports = await _firestore.GetAllAsync<Airport>("Airports");
             return View();
         }
 
@@ -40,62 +35,78 @@ namespace BookingAdmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Ticket ticket)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "⚠️ Dữ liệu không hợp lệ!";
+                ViewBag.Airlines = await _firestore.GetAllAsync<Airline>("Airlines");
+                ViewBag.Airports = await _firestore.GetAllAsync<Airport>("Airports");
+                return View(ticket);
+            }
+
             await _firestore.AddAsync("tickets", ticket);
             TempData["Success"] = "✅ Đã thêm vé mới thành công!";
             return RedirectToAction(nameof(Index));
         }
 
-        // 🟡 FORM SỬA
+        // 🟡 Hiển thị form sửa
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var item = await _firestore.GetByIdAsync<Ticket>("tickets", id);
-            if (item == null)
+            if (string.IsNullOrEmpty(id))
+            {
+                TempData["Error"] = "⚠️ Không xác định được vé cần sửa!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var ticket = await _firestore.GetByIdAsync<Ticket>("tickets", id);
+            if (ticket == null)
             {
                 TempData["Error"] = "❌ Không tìm thấy vé cần sửa!";
                 return RedirectToAction(nameof(Index));
             }
 
-            // 🔹 Lấy dữ liệu sân bay & hãng bay từ Firestore để hiển thị trong dropdown
-            var airlines = await _firestore.GetAllAsync<Airline>("Airlines");
-            var airports = await _firestore.GetAllAsync<Airport>("Airports");
+            ViewBag.Airlines = await _firestore.GetAllAsync<Airline>("Airlines");
+            ViewBag.Airports = await _firestore.GetAllAsync<Airport>("Airports");
 
-            ViewBag.Airlines = airlines;
-            ViewBag.Airports = airports;
-
-            return View(item);
+            return View(ticket);
         }
 
+        // 🟡 Xử lý cập nhật
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Ticket ticket)
         {
-            if (!ModelState.IsValid)
-                return View(ticket);
-
-            await _firestore.UpdateAsync("tickets", ticket.Id, ticket);
-            TempData["Success"] = "✏️ Cập nhật vé thành công!";
-            return RedirectToAction(nameof(Index));
-        }
-
-        // 🔴 FORM XÓA
-        [HttpGet]
-        public async Task<IActionResult> Delete(string id)
-        {
-            var item = await _firestore.GetByIdAsync<Ticket>("tickets", id);
-            if (item == null)
+            if (string.IsNullOrEmpty(ticket.Id))
             {
-                TempData["Error"] = "❌ Không tìm thấy vé cần xóa!";
+                TempData["Error"] = "⚠️ Không tìm thấy ID vé để cập nhật!";
                 return RedirectToAction(nameof(Index));
             }
-            return View(item);
+
+            try
+            {
+                await _firestore.UpdateAsync("tickets", ticket.Id, ticket);
+                TempData["Success"] = "✅ Cập nhật vé thành công!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"❌ Lỗi khi cập nhật vé: {ex.Message}";
+                ViewBag.Airlines = await _firestore.GetAllAsync<Airline>("Airlines");
+                ViewBag.Airports = await _firestore.GetAllAsync<Airport>("Airports");
+                return View(ticket);
+            }
         }
 
-        // 🔴 XÁC NHẬN XÓA
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        // 🔴 XÓA TRỰC TIẾP KHỎI FIRESTORE
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                TempData["Error"] = "⚠️ Không tìm thấy ID vé cần xóa!";
+                return RedirectToAction(nameof(Index));
+            }
+
             try
             {
                 await _firestore.DeleteAsync("tickets", id);
@@ -103,7 +114,7 @@ namespace BookingAdmin.Controllers
             }
             catch (Exception ex)
             {
-                TempData["Error"] = $"⚠️ Lỗi khi xóa: {ex.Message}";
+                TempData["Error"] = $"❌ Lỗi khi xóa vé: {ex.Message}";
             }
 
             return RedirectToAction(nameof(Index));
