@@ -11,14 +11,22 @@
     @using (Html.BeginForm("Create", "Ticket", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        //111
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger text-center fw-semibold">
+                ⚠️ @TempData["Error"]
+            </div>
+        }
 
+        @Html.ValidationSummary(true, "", new { @class = "text-danger fw-semibold" })
         <div class="row g-3 shadow p-4 bg-light rounded-4">
             <!-- 🔹 Hãng bay -->
             <div class="col-md-6">
                 <label asp-for="Airline" class="form-label fw-semibold">Hãng bay</label>
                 <select asp-for="Airline" class="form-select" required>
                     <option value="" selected disabled>-- Chọn hãng bay --</option>
-                    @foreach (var a in airlines)
+                    @foreach (var a in ViewBag.Airlines)
                     {
                         <option value="@a.Name">@a.Name</option>
                     }
@@ -26,10 +34,17 @@
             </div>
 
             <!-- 🔹 Loại vé -->
-            <div class="col-md-6">
+            @* <div class="col-md-6">
                 <label class="form-label fw-semibold">Loại vé</label>
                 <select id="FlightType" name="FlightType" class="form-select" required>
                     <option value="Một chiều" selected>Một chiều</option>
+                    <option value="Khứ hồi">Khứ hồi</option>
+                </select>
+            </div> *@
+            <div class="col-md-6">
+                <label asp-for="FlightType" class="form-label fw-semibold">Loại vé</label>
+                <select asp-for="FlightType" class="form-select" required>
+                    <option value="Một chiều">Một chiều</option>
                     <option value="Khứ hồi">Khứ hồi</option>
                 </select>
             </div>

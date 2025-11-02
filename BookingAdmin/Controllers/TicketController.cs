@@ -33,21 +33,63 @@ namespace BookingAdmin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(Ticket ticket)
+        //{
+        //    //if (!ModelState.IsValid)
+        //    //{
+        //    //    TempData["Error"] = "⚠️ Dữ liệu không hợp lệ!";
+        //    //    ViewBag.Airlines = await _firestore.GetAllAsync<Airline>("Airlines");
+        //    //    ViewBag.Airports = await _firestore.GetAllAsync<Airport>("Airports");
+        //    //    return View(ticket);
+        //    //}
+
+        //    //await _firestore.AddAsync("tickets", ticket);
+        //    //TempData["Success"] = "✅ Đã thêm vé mới thành công!";
+        //    //return RedirectToAction(nameof(Index));
+        //    if (!ModelState.IsValid)
+        //    {
+        //        // Log lỗi chi tiết để xem
+        //        var errors = ModelState.Values
+        //            .SelectMany(v => v.Errors)
+        //            .Select(e => e.ErrorMessage)
+        //            .ToList();
+        //        Console.WriteLine("ModelState Errors: " + string.Join(", ", errors));
+
+        //        TempData["Error"] = "Dữ liệu không hợp lệ!";
+        //        return View(ticket);
+        //    }
+
+        //    await _firestore.AddAsync("tickets", ticket);
+        //    TempData["Success"] = "Thêm vé thành công!";
+        //    return RedirectToAction("Index");
+        //}
         public async Task<IActionResult> Create(Ticket ticket)
         {
             if (!ModelState.IsValid)
             {
+                // Log lỗi chi tiết để xem
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                Console.WriteLine("ModelState Errors: " + string.Join(", ", errors));
+
                 TempData["Error"] = "⚠️ Dữ liệu không hợp lệ!";
+
+                // 🟢 Gán lại ViewBag để tránh null khi render lại view
                 ViewBag.Airlines = await _firestore.GetAllAsync<Airline>("Airlines");
                 ViewBag.Airports = await _firestore.GetAllAsync<Airport>("Airports");
+
                 return View(ticket);
             }
+            // 🟢 TẠO ID NGẪU NHIÊN TRƯỚC KHI LƯU
+            ticket.Id = Guid.NewGuid().ToString();
 
+            // 🟢 LƯU DỮ LIỆU LÊN FIRESTORE
             await _firestore.AddAsync("tickets", ticket);
             TempData["Success"] = "✅ Đã thêm vé mới thành công!";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
-
         // 🟡 Hiển thị form sửa
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
