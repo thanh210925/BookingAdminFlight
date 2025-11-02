@@ -37,7 +37,49 @@ namespace BookingAdmin.Controllers
             Console.WriteLine($"✅ Vé hợp lệ: {validTickets.Count}");
 
             // 🔹 Gom theo tháng (tự động nhận dạng DD-MM-YYYY hoặc YYYY-MM-DD)
-            var monthlyStats = validTickets
+            //var monthlyStats = validTickets
+            //    .GroupBy(t =>
+            //    {
+            //        try
+            //        {
+            //            string raw = t.DepartureDate?.Replace("/", "-").Trim();
+            //            DateTime parsed;
+
+            //            // ✅ Dùng TryParseExact một lần với nhiều định dạng
+            //            if (DateTime.TryParseExact(
+            //                raw,
+            //                new[] { "yyyy-MM-dd", "dd-MM-yyyy" },
+            //                CultureInfo.InvariantCulture,
+            //                DateTimeStyles.None,
+            //                out parsed))
+            //            {
+            //                return parsed.Month;
+            //            }
+            //            else
+            //            {
+            //                Console.WriteLine($"⚠️ Không đọc được ngày: {raw}");
+            //                return 0;
+            //            }
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            Console.WriteLine($"❌ Lỗi parse ngày: {ex.Message}");
+            //            return 0;
+            //        }
+
+            //    })
+            //    .Where(g => g.Key > 0)
+            //    .Select(g => new
+            //    {
+            //        Month = g.Key,
+            //        TicketCount = g.Count(),
+            //        TotalRevenue = g.Sum(t => t.Price)
+            //    })
+            //    .OrderBy(x => x.Month)
+            //    .ToList();
+
+            // 🔹 Gom theo tháng như cũ
+            var groupedByMonth = validTickets
                 .GroupBy(t =>
                 {
                     try
@@ -45,7 +87,6 @@ namespace BookingAdmin.Controllers
                         string raw = t.DepartureDate?.Replace("/", "-").Trim();
                         DateTime parsed;
 
-                        // ✅ Dùng TryParseExact một lần với nhiều định dạng
                         if (DateTime.TryParseExact(
                             raw,
                             new[] { "yyyy-MM-dd", "dd-MM-yyyy" },
@@ -61,43 +102,63 @@ namespace BookingAdmin.Controllers
                             return 0;
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        Console.WriteLine($"❌ Lỗi parse ngày: {ex.Message}");
                         return 0;
                     }
-                    
                 })
                 .Where(g => g.Key > 0)
-                .Select(g => new
+                .ToDictionary(g => g.Key, g => new
                 {
-                    Month = g.Key,
                     TicketCount = g.Count(),
                     TotalRevenue = g.Sum(t => t.Price)
+                });
+
+            // ✅ Tạo danh sách đủ 12 tháng
+            var monthlyStats = Enumerable.Range(1, 12)
+                .Select(m => new
+                {
+                    Month = m,
+                    TicketCount = groupedByMonth.ContainsKey(m) ? groupedByMonth[m].TicketCount : 0,
+                    TotalRevenue = groupedByMonth.ContainsKey(m) ? groupedByMonth[m].TotalRevenue : 0
                 })
-                .OrderBy(x => x.Month)
                 .ToList();
 
             // 🔹 Gom theo hãng bay
+            //var airlineStats = validTickets
+            //    .GroupBy(t => t.Airline)
+            //    .Select(g => new
+            //    {
+            //        Airline = g.Key,
+            //        TicketCount = g.Count(),
+            //        TotalRevenue = g.Sum(t => t.Price)
+            //    })
+            //    .OrderByDescending(x => x.TicketCount)
+            //    .ToList();
             var airlineStats = validTickets
-                .GroupBy(t => t.Airline)
-                .Select(g => new
-                {
-                    Airline = g.Key,
-                    TicketCount = g.Count(),
-                    TotalRevenue = g.Sum(t => t.Price)
-                })
-                .OrderByDescending(x => x.TicketCount)
-                .ToList();
+            .GroupBy(t => t.Airline)
+            .Select(g => new
+            {
+                Airline = g.Key,
+                TicketCount = g.Count(),
+                TotalRevenue = g.Sum(t => Convert.ToDecimal(t.Price)) // ✅ tránh tràn số
+            })
+            .OrderByDescending(x => x.TicketCount)
+            .ToList();
+
 
             // 🔹 Gửi sang View
             ViewBag.Months = monthlyStats.Select(x => $"Tháng {x.Month}").ToList();
             ViewBag.TicketCounts = monthlyStats.Select(x => x.TicketCount).ToList();
-            ViewBag.Revenues = monthlyStats.Select(x => (double)x.TotalRevenue / 1_000_000).ToList();
+            ViewBag.Revenues = monthlyStats
+                .Select(x => Math.Round((double)x.TotalRevenue / 1_000_000, 2)) // triệu ₫
+                .ToList();
 
             ViewBag.AirlineNames = airlineStats.Select(x => x.Airline).ToList();
             ViewBag.AirlineTickets = airlineStats.Select(x => x.TicketCount).ToList();
-            ViewBag.AirlineRevenue = airlineStats.Select(x => (double)x.TotalRevenue / 1_000_000).ToList();
+            ViewBag.AirlineRevenue = airlineStats
+                .Select(x => Math.Round((double)x.TotalRevenue / 1_000_000, 2)) // triệu ₫
+                .ToList();
 
             // 🧠 Log xác nhận
             Console.WriteLine("🎯 Dữ liệu thống kê:");
