@@ -16,7 +16,7 @@ namespace BookingAdmin.Services
         public FirestoreService()
         {
             // 🔹 Tên file key Firebase (bé giữ nguyên file này)
-            string keyFileName = "device-streaming-3412c6be-firebase-adminsdk-gwxlc-439805a46b.json";
+            string keyFileName = "device-streaming-3412c6be-firebase-adminsdk-gwxlc-501b908c62.json";
 
             // 🔹 Đường dẫn tuyệt đối đến file key (trong bin/Debug/net8.0)
             string credentialPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, keyFileName);

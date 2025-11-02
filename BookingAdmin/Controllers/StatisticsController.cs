@@ -21,7 +21,7 @@ namespace BookingAdmin.Controllers
         public async Task<IActionResult> Index()
         {
             // 🔹 Lấy dữ liệu vé thật từ Firestore
-            var tickets = await _firestore.GetAllAsync<Ticket>("Tickets");
+            var tickets = await _firestore.GetAllAsync<Ticket>("tickets");
             Console.WriteLine($"📦 Tổng vé lấy được: {tickets.Count}");
 
             foreach (var t in tickets)
@@ -42,12 +42,16 @@ namespace BookingAdmin.Controllers
                 {
                     try
                     {
-                        string raw = t.DepartureDate.Replace("/", "-").Trim();
+                        string raw = t.DepartureDate?.Replace("/", "-").Trim();
                         DateTime parsed;
 
-                        // Thử 2 định dạng phổ biến
-                        if (DateTime.TryParseExact(raw, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsed) ||
-                            DateTime.TryParseExact(raw, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsed))
+                        // ✅ Dùng TryParseExact một lần với nhiều định dạng
+                        if (DateTime.TryParseExact(
+                            raw,
+                            new[] { "yyyy-MM-dd", "dd-MM-yyyy" },
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.None,
+                            out parsed))
                         {
                             return parsed.Month;
                         }
@@ -57,10 +61,12 @@ namespace BookingAdmin.Controllers
                             return 0;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Console.WriteLine($"❌ Lỗi parse ngày: {ex.Message}");
                         return 0;
                     }
+                    
                 })
                 .Where(g => g.Key > 0)
                 .Select(g => new

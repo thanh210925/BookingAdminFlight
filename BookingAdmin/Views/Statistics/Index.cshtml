@@ -27,6 +27,12 @@
     const airlineTickets = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.AirlineTickets));
     const airlineRevenue = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.AirlineRevenue));
 
+
+        // ✅ Thêm điểm 0 đầu tiên
+    const monthsWithZero = ['Bắt đầu', ...months];
+    const revenuesWithZero = [0, ...revenues];
+    const ticketCountsWithZero = [0, ...ticketCounts];
+
     // 🎨 Biểu đồ song song (vé & doanh thu)
     new Chart(document.getElementById('chartTicketsRevenue'), {
         data: {
@@ -46,11 +52,11 @@
                     type: 'line',
                     label: 'Doanh thu (triệu ₫)',
                     data: revenues,
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)', // 🔴 Màu đỏ nhạt
+                    borderColor: 'rgba(255, 99, 132, 1)',        // 🔴 Màu đỏ đậm cho đường viền
                     borderWidth: 3,
                     tension: 0.4,
-                    fill: false,
+                    fill: true,
                     yAxisID: 'yRevenue'
                 }
             ]
