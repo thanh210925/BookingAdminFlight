@@ -1,148 +1,152 @@
 ﻿@model BookingAdmin.Models.Ticket
 @{
-    ViewData["Title"] = "Thêm vé máy bay mới";
+    ViewData["Title"] = "Thêm vé máy bay";
+    Layout = "_LayoutTicket";
     var airlines = ViewBag.Airlines as List<BookingAdmin.Models.Airline>;
     var airports = ViewBag.Airports as List<BookingAdmin.Models.Airport>;
 }
 
-<div class="container mt-5">
-    <h2 class="fw-bold text-success mb-4 text-center">✈️ Thêm vé máy bay mới</h2>
+<div class="ticket-create-bg">
+    <!-- 🌈 Header -->
+    <div class="text-center mb-5">
+        <div style="font-size: 3rem;">✈️</div>
+        <h1 class="ticket-create-title fw-bold">Thêm vé máy bay</h1>
+        <p class="ticket-create-subtitle">Quản lý hệ thống bán vé hàng không</p>
+    </div>
 
+    <!-- 🧾 Form -->
     @using (Html.BeginForm("Create", "Ticket", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        //111
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-danger text-center fw-semibold">
-                ⚠️ @TempData["Error"]
-            </div>
-        }
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger fw-semibold" })
-        <div class="row g-3 shadow p-4 bg-light rounded-4">
-            <!-- 🔹 Hãng bay -->
-            <div class="col-md-6">
-                <label asp-for="Airline" class="form-label fw-semibold">Hãng bay</label>
-                <select asp-for="Airline" class="form-select" required>
-                    <option value="" selected disabled>-- Chọn hãng bay --</option>
-                    @foreach (var a in ViewBag.Airlines)
-                    {
-                        <option value="@a.Name">@a.Name</option>
-                    }
-                </select>
-            </div>
+        <div class="ticket-create-form">
+            <!-- 📋 Thông tin chuyến bay -->
+            <div class="mb-5">
+                <h5 class="fw-bold text-primary mb-4">📋 Thông tin chuyến bay</h5>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label asp-for="Airline" class="form-label fw-semibold">Hãng bay</label>
+                        <select asp-for="Airline" class="form-select form-select-lg border-0 bg-light rounded-3 p-3" required>
+                            <option value="" selected disabled>Chọn hãng bay...</option>
+                            @foreach (var a in airlines)
+                            {
+                                <option value="@a.Name">@a.Name</option>
+                            }
+                        </select>
+                    </div>
 
-            <!-- 🔹 Loại vé -->
-            @* <div class="col-md-6">
-                <label class="form-label fw-semibold">Loại vé</label>
-                <select id="FlightType" name="FlightType" class="form-select" required>
-                    <option value="Một chiều" selected>Một chiều</option>
-                    <option value="Khứ hồi">Khứ hồi</option>
-                </select>
-            </div> *@
-            <div class="col-md-6">
-                <label asp-for="FlightType" class="form-label fw-semibold">Loại vé</label>
-                <select asp-for="FlightType" class="form-select" required>
-                    <option value="Một chiều">Một chiều</option>
-                    <option value="Khứ hồi">Khứ hồi</option>
-                </select>
+                    <div class="col-md-6">
+                        <label asp-for="FlightType" class="form-label fw-semibold">Loại vé</label>
+                        <select asp-for="FlightType" id="FlightType" class="form-select form-select-lg border-0 bg-light rounded-3 p-3" required>
+                            <option value="Một chiều">Một chiều</option>
+                            <option value="Khứ hồi">Khứ hồi</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <!-- 🔹 Điểm đi -->
-            <div class="col-md-6">
-                <label asp-for="DepartureAirport" class="form-label fw-semibold">Điểm đi</label>
-                <select asp-for="DepartureAirport" class="form-select" required>
-                    <option value="" selected disabled>-- Chọn sân bay đi --</option>
-                    @foreach (var ap in airports)
-                    {
-                        <option value="@($"{ap.Code} - {ap.City}")">@($"{ap.Code} - {ap.City}")</option>
-                    }
-                </select>
+            <!-- 🛫 Lộ trình outbound -->
+            <div class="mb-5">
+                <h5 class="fw-bold text-primary mb-4">🛫 Lộ trình outbound</h5>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label asp-for="DepartureAirport" class="form-label fw-semibold">Điểm khởi hành</label>
+                        <select asp-for="DepartureAirport" class="form-select form-select-lg border-0 bg-light rounded-3 p-3" required>
+                            <option value="" selected disabled>Chọn sân bay...</option>
+                            @foreach (var ap in airports)
+                            {
+                                <option value="@($"{ap.Code} - {ap.City}")">@($"{ap.Code} - {ap.City}")</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ArrivalAirport" class="form-label fw-semibold">Điểm đến</label>
+                        <select asp-for="ArrivalAirport" class="form-select form-select-lg border-0 bg-light rounded-3 p-3" required>
+                            <option value="" selected disabled>Chọn sân bay...</option>
+                            @foreach (var ap in airports)
+                            {
+                                <option value="@($"{ap.Code} - {ap.City}")">@($"{ap.Code} - {ap.City}")</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="DepartureDate" class="form-label fw-semibold">Ngày khởi hành</label>
+                        <input asp-for="DepartureDate" type="date" class="form-control form-control-lg border-0 bg-light rounded-3 p-3" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="DepartureTime" class="form-label fw-semibold">Giờ khởi hành</label>
+                        <input asp-for="DepartureTime" type="time" class="form-control form-control-lg border-0 bg-light rounded-3 p-3" required />
+                    </div>
+                </div>
             </div>
 
-            <!-- 🔹 Điểm đến -->
-            <div class="col-md-6">
-                <label asp-for="ArrivalAirport" class="form-label fw-semibold">Điểm đến</label>
-                <select asp-for="ArrivalAirport" class="form-select" required>
-                    <option value="" selected disabled>-- Chọn sân bay đến --</option>
-                    @foreach (var ap in airports)
-                    {
-                        <option value="@($"{ap.Code} - {ap.City}")">@($"{ap.Code} - {ap.City}")</option>
-                    }
-                </select>
+            <!-- 🛬 Lộ trình return -->
+            <div id="returnSection">
+                <h5 class="fw-bold text-primary mb-4">🛬 Lộ trình return</h5>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label asp-for="ReturnDate" class="form-label fw-semibold">Ngày về</label>
+                        <input asp-for="ReturnDate" type="date" class="form-control form-control-lg border-0 bg-light rounded-3 p-3" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ReturnTime" class="form-label fw-semibold">Giờ về</label>
+                        <input asp-for="ReturnTime" type="time" class="form-control form-control-lg border-0 bg-light rounded-3 p-3" />
+                    </div>
+                </div>
             </div>
 
-            <!-- 🔹 Ngày đi -->
-            <div class="col-md-6">
-                <label asp-for="DepartureDate" class="form-label fw-semibold">Ngày đi</label>
-                <input asp-for="DepartureDate" type="date" class="form-control" required />
-            </div>
+            <!-- 💺 Thông tin vé -->
+            <div class="mt-5">
+                <h5 class="fw-bold text-primary mb-4">💺 Thông tin vé</h5>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label asp-for="SeatClass" class="form-label fw-semibold">Hạng ghế</label>
+                        <select asp-for="SeatClass" class="form-select form-select-lg border-0 bg-light rounded-3 p-3" required>
+                            <option value="" selected disabled>Chọn hạng ghế...</option>
+                            <option>Phổ thông</option>
+                            <option>Thương gia</option>
+                            <option>Hạng nhất</option>
+                        </select>
+                    </div>
 
-            <!-- 🔹 Giờ đi -->
-            <div class="col-md-6">
-                <label asp-for="DepartureTime" class="form-label fw-semibold">Giờ đi</label>
-                <input asp-for="DepartureTime" type="time" class="form-control" required />
-            </div>
-
-            <!-- 🔹 Ngày về -->
-            <div class="col-md-6" id="returnDateField" style="display:none;">
-                <label asp-for="ReturnDate" class="form-label fw-semibold">Ngày về</label>
-                <input asp-for="ReturnDate" type="date" class="form-control" />
-            </div>
-
-            <!-- 🔹 Giờ về -->
-            <div class="col-md-6" id="returnTimeField" style="display:none;">
-                <label asp-for="ReturnTime" class="form-label fw-semibold">Giờ về</label>
-                <input asp-for="ReturnTime" type="time" class="form-control" />
-            </div>
-
-            <!-- 🔹 Hạng ghế -->
-            <div class="col-md-6">
-                <label asp-for="SeatClass" class="form-label fw-semibold">Hạng ghế</label>
-                <select asp-for="SeatClass" class="form-select" required>
-                    <option value="" selected disabled>-- Chọn hạng ghế --</option>
-                    <option>Phổ thông</option>
-                    <option>Thương gia</option>
-                    <option>Hạng nhất</option>
-                </select>
-            </div>
-
-            <!-- 🔹 Giá vé -->
-            <div class="col-md-6">
-                <label asp-for="Price" class="form-label fw-semibold">Giá vé (VNĐ)</label>
-                <input asp-for="Price" type="number" class="form-control" min="1000" step="1000" placeholder="VD: 1200000" required />
+                    <div class="col-md-6">
+                        <label asp-for="Price" class="form-label fw-semibold">Giá vé (VNĐ)</label>
+                        <input asp-for="Price" type="number" min="1000" step="1000" class="form-control form-control-lg border-0 bg-light rounded-3 p-3" placeholder="VD: 1.200.000" required />
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="mt-4 text-end">
-            <button type="submit" class="btn btn-success px-4 py-2 fw-semibold">💾 Lưu vé</button>
-            <a asp-action="Index" class="btn btn-secondary px-4 py-2 fw-semibold">⬅️ Quay lại</a>
+        <!-- 🧭 Nút hành động -->
+        <div class="d-flex gap-4 justify-content-center mt-5">
+            <button type="submit" class="btn btn-lg fw-bold text-white shadow ticket-create-btn-save">
+                💾 Lưu vé
+            </button>
+            <a asp-action="Index" class="btn btn-lg fw-bold ticket-create-btn-back">
+                ⬅️ Quay lại
+            </a>
         </div>
     }
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
     <script>
-        // Ẩn/hiện ngày & giờ về khi chọn loại vé
         const flightType = document.getElementById("FlightType");
-        const returnDate = document.getElementById("returnDateField");
-        const returnTime = document.getElementById("returnTimeField");
+        const returnSection = document.getElementById("returnSection");
 
-        function toggleReturnFields() {
+        function toggleReturnSection() {
             if (flightType.value === "Khứ hồi") {
-                returnDate.style.display = "block";
-                returnTime.style.display = "block";
+                returnSection.style.display = "block";
             } else {
-                returnDate.style.display = "none";
-                returnTime.style.display = "none";
-                document.getElementById("ReturnDate").value = "";
-                document.getElementById("ReturnTime").value = "";
+                returnSection.style.display = "none";
             }
         }
 
-        flightType.addEventListener("change", toggleReturnFields);
-        toggleReturnFields();
+        flightType.addEventListener("change", toggleReturnSection);
+        toggleReturnSection();
     </script>
 }

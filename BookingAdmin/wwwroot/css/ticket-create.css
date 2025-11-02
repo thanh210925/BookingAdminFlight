@@ -1,0 +1,81 @@
+﻿/* 🌈 Nền full màn hình */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* 📦 Container chính */
+.ticket-create-bg {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 3rem 2rem;
+}
+
+/* 🧾 Form chính */
+.ticket-create-form {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 3rem;
+    width: 100%;
+    max-width: 1000px;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* 🌀 Hiệu ứng mượt */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ✨ Header */
+.ticket-create-title {
+    font-size: 2.5rem;
+    color: #fff;
+}
+
+.ticket-create-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+}
+
+/* 🧭 Nút hành động */
+.ticket-create-btn-save {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 0.75rem;
+    padding: 1rem 3rem;
+    transition: 0.3s;
+}
+
+    .ticket-create-btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
+    }
+
+.ticket-create-btn-back {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 0.75rem;
+    padding: 1rem 3rem;
+    transition: 0.3s;
+}
+
+    .ticket-create-btn-back:hover {
+        background: #f8f9ff;
+        transform: translateY(-2px);
+    }
