@@ -35,5 +35,11 @@ namespace BookingAdmin.Models
 
         [FirestoreProperty("seatClass")]
         public string SeatClass { get; set; }
+        [FirestoreProperty("returnTime")]
+        public string ReturnTime { get; set; }
+
+        [FirestoreProperty("flightType")]
+        public string FlightType { get; set; }
+
     }
 }
