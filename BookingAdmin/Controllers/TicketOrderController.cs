@@ -14,14 +14,18 @@ namespace BookingAdmin.Controllers
             _firestore = new FirestoreService();
         }
 
+        // ==========================
         // 🔹 Danh sách đơn hàng
+        // ==========================
         public async Task<IActionResult> Index()
         {
             var orders = await _firestore.GetAllAsync<TicketOrder>("Tickets");
             return View(orders);
         }
 
-        // 🔹 Xem chi tiết
+        // ==========================
+        // 🔹 Xem chi tiết đơn
+        // ==========================
         public async Task<IActionResult> Details(string id)
         {
             var order = await _firestore.GetByIdAsync<TicketOrder>("Tickets", id);
@@ -29,20 +33,38 @@ namespace BookingAdmin.Controllers
             return View(order);
         }
 
-        // 🔹 Cập nhật trạng thái
+        // ==========================
+        // 🔹 Update trạng thái THEO BOOKING ID
+        // ==========================
         [HttpPost]
-        public async Task<IActionResult> UpdateStatus(string id, string status)
+        public async Task<IActionResult> UpdateStatusByBooking(string bookingId, string status)
         {
-            await _firestore.UpdateFieldAsync("Tickets", id, "status", status);
-            TempData["Success"] = "✅ Cập nhật trạng thái đơn hàng thành công!";
+            if (string.IsNullOrEmpty(bookingId))
+            {
+                TempData["Error"] = "❌ bookingId trống!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            await _firestore.UpdateStatusByBookingAsync("Tickets", bookingId, status);
+
+            TempData["Success"] = $"✅ Đã cập nhật {status} cho tất cả vé thuộc booking {bookingId}!";
             return RedirectToAction(nameof(Index));
         }
 
-        // 🔹 Xóa đơn hàng
-        public async Task<IActionResult> Delete(string id)
+        // ==========================
+        // 🔹 Xóa TẤT CẢ vé theo bookingId
+        // ==========================
+        public async Task<IActionResult> DeleteByBooking(string bookingId)
         {
-            await _firestore.DeleteAsync("Tickets", id);
-            TempData["Success"] = "🗑️ Đã xóa đơn hàng!";
+            var tickets = await _firestore.GetAllAsync<TicketOrder>("Tickets");
+
+            foreach (var t in tickets)
+            {
+                if (t.BookingId == bookingId)
+                    await _firestore.DeleteAsync("Tickets", t.Id);
+            }
+
+            TempData["Success"] = "🗑️ Đã xóa toàn bộ vé trong cùng booking!";
             return RedirectToAction(nameof(Index));
         }
     }

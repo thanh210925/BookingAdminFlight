@@ -141,6 +141,18 @@ namespace BookingAdmin.Services
             await docRef.UpdateAsync(updates);
             Console.WriteLine($"🔄 Đã cập nhật field '{fieldName}' của document '{documentId}' trong collection '{collectionName}'");
         }
+        public async Task UpdateStatusByBookingAsync(string collection, string bookingId, string status)
+        {
+            var query = _db.Collection(collection)
+                           .WhereEqualTo("bookingId", bookingId);
+
+            var snap = await query.GetSnapshotAsync();
+
+            foreach (var doc in snap.Documents)
+            {
+                await doc.Reference.UpdateAsync("status", status);
+            }
+        }
 
     }
 }

@@ -12,6 +12,7 @@ namespace BookingAdmin
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSingleton<BookingAdmin.Services.FirestoreService>();
 
             var app = builder.Build();
 

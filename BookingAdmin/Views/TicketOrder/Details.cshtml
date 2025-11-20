@@ -8,30 +8,94 @@
     <h2 class="fw-bold text-primary mb-4 text-center">🔍 Chi tiết Đơn hàng Vé</h2>
 
     <div class="card shadow border-0 rounded-4 p-4">
-        <p><strong>Khách hàng:</strong> @Model.FullName (@Model.Email)</p>
-        <p><strong>CMND:</strong> @Model.Cmnd</p>
-        <p><strong>Hãng bay:</strong> @Model.Airline</p>
-        <p><strong>Chặng bay:</strong> @Model.Departure → @Model.Destination</p>
-        <p><strong>Ngày đi:</strong> @Model.DepartureDate</p>
-        <p><strong>Ngày về:</strong> @Model.ReturnDate</p>
-        <p><strong>Ghế đi:</strong> @string.Join(", ", Model.DepartureSeats ?? new List<string>())</p>
-        <p><strong>Ghế về:</strong> @string.Join(", ", Model.ReturnSeats ?? new List<string>())</p>
-        <p><strong>Hạng ghế:</strong> @Model.SeatClass</p>
-        <p><strong>Trạng thái:</strong> @Model.Status</p>
-        <p><strong>Tổng tiền:</strong> @Model.TotalPrice.ToString("N0") ₫</p>
 
-        <p><strong>Hình thanh toán:</strong></p>
-        @if (!string.IsNullOrEmpty(Model.PaymentImageUrl))
+        <!-- THÔNG TIN CHUNG -->
+        <h4 class="fw-bold mb-3 text-secondary">📌 Thông tin chung</h4>
+
+        <p><strong>Mã vé:</strong> @Model.Id</p>
+        <p><strong>Booking ID:</strong> @Model.BookingId</p>
+        <p>
+            <strong>Loại vé:</strong>
+            <span class="badge bg-info text-dark">@Model.Kind</span>
+        </p>
+
+        <p><strong>Trạng thái:</strong> @Model.Status</p>
+
+        <hr />
+
+        <!-- HÀNH KHÁCH -->
+        <h4 class="fw-bold mb-3 text-secondary">👤 Thông tin hành khách</h4>
+
+        <p><strong>Họ tên:</strong> @Model.PassengerName</p>
+        <p><strong>Giới tính:</strong> @Model.Gender</p>
+        <p><strong>Ngày sinh:</strong> @Model.Dob</p>
+        <p><strong>Quốc tịch:</strong> @Model.Nationality</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Số điện thoại:</strong> @Model.Phone</p>
+        <p><strong>CMND/CCCD:</strong> @Model.Cmnd</p>
+        <p><strong>Địa chỉ:</strong> @Model.Address</p>
+
+        <hr />
+
+        <!-- THÔNG TIN CHUYẾN BAY -->
+        <h4 class="fw-bold mb-3 text-secondary">✈️ Thông tin chuyến bay</h4>
+
+        <p><strong>Hãng bay:</strong> @Model.Airline</p>
+
+        <p>
+            <strong>Chặng bay:</strong>
+            @Model.Departure → @Model.Destination
+        </p>
+
+        <!-- Lượt đi / Lượt về -->
+        @if (Model.Kind == "Lượt đi")
         {
-            <img src="@Model.PaymentImageUrl" class="rounded shadow" style="max-width:400px;" />
+            <p><strong>Ngày đi:</strong> @Model.Date</p>
         }
         else
         {
-            <p class="text-muted">Không có ảnh</p>
+            <p><strong>Ngày về:</strong> @Model.Date</p>
+        }
+
+        <p><strong>Giờ bay:</strong> @Model.Time</p>
+
+        <p><strong>Ghế:</strong> @Model.Seat</p>
+
+        <p><strong>Hạng ghế:</strong> @Model.SeatClass</p>
+
+        <hr />
+
+        <!-- THANH TOÁN -->
+        <h4 class="fw-bold mb-3 text-secondary">💰 Thông tin thanh toán</h4>
+
+        <p><strong>Giá vé:</strong> @Model.Price.ToString("N0") ₫</p>
+
+        <p>
+            <strong>Hành lý:</strong>
+            @(string.IsNullOrEmpty(Model.Luggage) ? "Không có" : Model.Luggage)
+        </p>
+
+        <p><strong>Phụ phí hành lý:</strong> @Model.LuggagePrice.ToString("N0") ₫</p>
+
+        <p class="fw-bold fs-5 text-primary">
+            <strong>Tổng tiền:</strong> @Model.TotalPrice.ToString("N0") ₫
+        </p>
+
+        <p><strong>Ảnh thanh toán:</strong></p>
+        @if (!string.IsNullOrEmpty(Model.PaymentImageUrl))
+        {
+            <img src="@Model.PaymentImageUrl"
+                 class="rounded shadow mb-3"
+                 style="max-width:400px; border:4px solid #eee;" />
+        }
+        else
+        {
+            <p class="text-muted">Không có ảnh thanh toán</p>
         }
 
         <div class="mt-4">
             <a asp-action="Index" class="btn btn-secondary">⬅ Quay lại</a>
         </div>
+
     </div>
 </div>

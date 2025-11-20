@@ -1,0 +1,199 @@
+﻿@model BookingAdmin.Models.ReportViewModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Thống kê hệ thống";
+    Layout = "_Layout";
+    var culture = new System.Globalization.CultureInfo("vi-VN");
+}
+
+<div class="container mt-4">
+
+    <h2 class="fw-bold text-primary text-center mb-4">📊 Thống kê hệ thống</h2>
+
+    <div class="text-end mb-3">
+        <a asp-action="ExportPdf" class="btn btn-danger fw-bold">
+            📄 Xuất báo cáo PDF
+        </a>
+    </div>
+
+    <!-- ====== TỔNG QUAN ====== -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-primary h-100">
+                <div class="card-body text-center">
+                    <div class="text-muted">Tổng vé bán</div>
+                    <div class="display-5 fw-bold">@Model.TotalTickets</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-success h-100">
+                <div class="card-body text-center">
+                    <div class="text-muted">Tổng doanh thu</div>
+                    <div class="display-6 fw-bold text-success">
+                        @Model.TotalRevenue.ToString("c0", culture)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-warning h-100">
+                <div class="card-body text-center">
+                    <div class="text-muted">Hãng bay bán nhiều nhất</div>
+                    <div class="fw-bold fs-5 text-warning">@Model.TopAirline</div>
+                    <div class="text-muted">@Model.TopAirlineCount vé</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-danger h-100">
+                <div class="card-body text-center">
+                    <div class="text-muted">Sân bay đang hoạt động</div>
+                    <div class="display-5 fw-bold text-danger">@Model.ActiveAirports</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ====== HÀNH LÝ + GIỮA ====== -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🎒 Thống kê hành lý</h5>
+                    <p>Vé có hành lý: <strong>@Model.TicketsHasLuggage</strong></p>
+                    <p>Vé không hành lý: <strong>@Model.TicketsNoLuggage</strong></p>
+                    <p>
+                        Doanh thu hành lý:
+                        <strong class="text-success">@Model.LuggageRevenue.ToString("c0", culture)</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🛫 Vé một chiều / khứ hồi</h5>
+                    <p>Đơn một chiều: <strong>@Model.OneWayBookings</strong></p>
+                    <p>Đơn khứ hồi: <strong>@Model.RoundTripBookings</strong></p>
+                    <p>Doanh thu một chiều: <strong>@Model.OneWayRevenue.ToString("c0", culture)</strong></p>
+                    <p>Doanh thu khứ hồi: <strong>@Model.RoundTripRevenue.ToString("c0", culture)</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">📊 Tỉ lệ loại vé</h5>
+                    <canvas id="tripTypeChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ====== BIỂU ĐỒ DOANH THU ====== -->
+    <div class="row g-3 mb-4">
+
+        <!-- Sân bay -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">💰 Doanh thu theo sân bay</h5>
+                    <canvas id="airportChart" height="260"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chặng bay -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">💰 Doanh thu theo chặng bay</h5>
+                    <canvas id="routeChart" height="260"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // ===== DATA =====
+    const airportLabels = @Html.Raw(JsonSerializer.Serialize(Model.AirportLabels));
+    const airportRevenue = @Html.Raw(JsonSerializer.Serialize(Model.AirportRevenue));
+
+    const routeLabels = @Html.Raw(JsonSerializer.Serialize(Model.RouteLabels));
+    const routeRevenue = @Html.Raw(JsonSerializer.Serialize(Model.RouteRevenue));
+
+    const oneWay = @Model.OneWayBookings;
+    const roundTrip = @Model.RoundTripBookings;
+
+    // ===== BIỂU ĐỒ SÂN BAY =====
+    new Chart(document.getElementById('airportChart'), {
+        type: 'bar',
+        data: {
+            labels: airportLabels,
+            datasets: [{
+                label: 'Doanh thu (VND)',
+                data: airportRevenue,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                barThickness: 35
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // ===== BIỂU ĐỒ CHẶNG BAY =====
+    new Chart(document.getElementById('routeChart'), {
+        type: 'bar',
+        data: {
+            labels: routeLabels,
+            datasets: [{
+                label: 'Doanh thu (VND)',
+                data: routeRevenue,
+                backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                barThickness: 35
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // ===== DONUT =====
+    new Chart(document.getElementById('tripTypeChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Một chiều', 'Khứ hồi'],
+            datasets: [{
+                data: [oneWay, roundTrip],
+                backgroundColor: ['#36A2EB', '#FF6384']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+</script>
